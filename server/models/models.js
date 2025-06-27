@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     specific: {
       flavor: { type: String },
@@ -19,9 +20,8 @@ const productSchema = new mongoose.Schema(
 
 const purchaseSchema = new mongoose.Schema(
   {
-    productId: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
+    productName: {
+      type: String,
       required: true,
     },
     purchaseDate: { type: Date, required: true },
