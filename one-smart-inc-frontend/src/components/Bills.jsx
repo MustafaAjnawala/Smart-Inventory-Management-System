@@ -387,9 +387,9 @@ const Bills = ({ onNotification }) => {
 
         <DialogContent dividers>
           {selectedBill && (
-            <Box>
+            <Box sx={{m:2}}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
-                <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap'}}>
                   <Box sx={{ flex: 1, minWidth: 200 }}>
                     <Typography variant="body2" color="text.secondary" gutterBottom>
                       Bill Number

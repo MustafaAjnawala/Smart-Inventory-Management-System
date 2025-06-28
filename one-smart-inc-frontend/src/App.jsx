@@ -165,18 +165,6 @@ function App() {
       </Box>
 
       <Box sx={{ flexGrow: 1 }} />
-
-      <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
-        <Button
-          fullWidth
-          startIcon={<PersonIcon />}
-          variant="outlined"
-          color="inherit"
-          sx={{ justifyContent: 'flex-start', py: 1 }}
-        >
-          User Settings
-        </Button>
-      </Box>
     </Box>
   );
 

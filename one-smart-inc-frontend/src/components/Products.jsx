@@ -254,7 +254,7 @@ const Products = ({ onNotification }) => {
         <DialogTitle>Add New Product</DialogTitle>
 
         <DialogContent dividers>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, m: 2 }}>
             <TextField
               fullWidth
               label="Product Name"

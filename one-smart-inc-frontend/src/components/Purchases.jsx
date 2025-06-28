@@ -299,7 +299,7 @@ const Purchases = ({ onNotification }) => {
       >
         <DialogTitle>Add New Purchase</DialogTitle>
         <DialogContent dividers>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, m: 2 }}>
             <Autocomplete
               options={products.map(p => p.name)}
               value={formData.productName}
