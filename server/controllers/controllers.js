@@ -57,6 +57,15 @@ async function handleGetAllPurchases(req, res) {
   }
 }
 
+async function handleGetAllBills(req, res) {
+  try {
+    const bills = await Bill.find().sort({ createdAt: -1 });
+    res.json(bills);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 async function handleGetAllExpiringPurchases(req, res) {
   try {
     const now = new Date();
@@ -167,6 +176,7 @@ module.exports = {
   handleGetAllProducts,
   handleAddNewPurchase,
   handleGetAllPurchases,
+  handleGetAllBills,
   handleGetAllExpiringPurchases,
   handleProcessReturn,
   handleBillProcessing,

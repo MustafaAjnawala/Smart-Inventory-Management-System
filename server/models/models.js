@@ -66,6 +66,8 @@ const billSchema = new mongoose.Schema(
         productName: { type: String },
         quantity: { type: Number },
         pricePerUnit: { type: Number },
+        discount: { type: Number, default: 0 }, // Discount percentage
+        discountedPrice: { type: Number }, // Price after discount
         total: { type: Number },
       },
     ],

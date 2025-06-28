@@ -10,6 +10,7 @@ const {
   handleGetAllExpiringPurchases,
   handleProcessReturn,
   handleBillProcessing,
+  handleGetAllBills,
 } = require("./controllers/controllers");
 require("dotenv").config();
 const PORT = process.env.port;
@@ -38,6 +39,9 @@ app.get("/api/purchases", handleGetAllPurchases);
 
 // Get SKUs expiring in next 30 days
 app.get("/api/purchases/expiring", handleGetAllExpiringPurchases);
+
+// Get all bills
+app.get("/api/bills", handleGetAllBills);
 
 //route to accept the return entry and make changes in purchase Qnty
 app.post("/api/returns", handleProcessReturn);
