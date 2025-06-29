@@ -48,6 +48,53 @@ app.post("/api/returns", handleProcessReturn);
 
 app.post("/api/bills", handleBillProcessing);
 
+// SYNC: Download all data for offline cache
+app.get("/api/sync", async (req, res) => {
+  try {
+    const [products, purchases, bills, returns] = await Promise.all([
+      Product.find(),
+      Purchase.find(),
+      Bill.find(),
+      Return.find(),
+    ]);
+    res.json({ products, purchases, bills, returns });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// SYNC: Upload local changes to cloud
+app.post("/api/sync", async (req, res) => {
+  try {
+    const { products, purchases, bills, returns } = req.body;
+    // Upsert logic for each collection
+    // For simplicity, use insertMany with upsert for each (production: use better conflict resolution)
+    if (products) {
+      for (const p of products) {
+        await Product.updateOne({ _id: p._id }, p, { upsert: true });
+      }
+    }
+    if (purchases) {
+      for (const p of purchases) {
+        await Purchase.updateOne({ _id: p._id }, p, { upsert: true });
+      }
+    }
+    if (bills) {
+      for (const b of bills) {
+        await Bill.updateOne({ _id: b._id }, b, { upsert: true });
+      }
+    }
+    if (returns) {
+      for (const r of returns) {
+        await Return.updateOne({ _id: r._id }, r, { upsert: true });
+      }
+    }
+    res.json({ msg: "Sync successful" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`App is running at http://localhost:${PORT}`);
 });
