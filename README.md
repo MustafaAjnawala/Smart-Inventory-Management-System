@@ -17,7 +17,7 @@ This is an inventory management system for One Smart Inc. built with the MERN st
 This project was created by:
 
 *   **Mustafa Ajnawala** - [GitHub Profile](https://github.com/MustafaAjnawala)
-*   **O-Erebus** - [GitHub Profile](https://github.com/o-Erebus)
+*   **Neel Khatri** - [GitHub Profile](https://github.com/o-Erebus)
 
 ## 📂 Directory Structure
 
