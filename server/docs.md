@@ -103,6 +103,14 @@ This document provides a comprehensive overview of the CareEco Inventory Managem
         ]
         ```
 
+*   **`GET /api/purchases/expiring`**: Get all purchases expiring in the next 30 days.
+    *   **Response**:
+        ```json
+        [
+          { ... } // Array of purchase objects
+        ]
+        ```
+
 ### Bill Endpoints
 
 *   **`GET /api/bills`**: Get all bills.
@@ -113,7 +121,7 @@ This document provides a comprehensive overview of the CareEco Inventory Managem
         ]
         ```
 
-*   **`POST /api/billing`**: Process a new bill.
+*   **`POST /api/bills`**: Process a new bill.
     *   **Request Body**:
         ```json
         {
@@ -155,6 +163,36 @@ This document provides a comprehensive overview of the CareEco Inventory Managem
           "msg": "Return processed succesfully",
           "return": { ... }, // Return object
           "currentnINventory": 90
+        }
+        ```
+
+### Sync Endpoints
+
+*   **`GET /api/sync`**: Download all data for offline cache.
+    *   **Response**:
+        ```json
+        {
+          "products": [ ... ],
+          "purchases": [ ... ],
+          "bills": [ ... ],
+          "returns": [ ... ]
+        }
+        ```
+
+*   **`POST /api/sync`**: Upload local changes to the cloud.
+    *   **Request Body**:
+        ```json
+        {
+          "products": [ ... ],
+          "purchases": [ ... ],
+          "bills": [ ... ],
+          "returns": [ ... ]
+        }
+        ```
+    *   **Response**:
+        ```json
+        {
+          "msg": "Sync successful"
         }
         ```
 

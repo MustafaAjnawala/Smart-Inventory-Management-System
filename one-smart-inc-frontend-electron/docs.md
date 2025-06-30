@@ -24,3 +24,4 @@ This application uses `react-router-dom` with `HashRouter` for routing. The rout
 *   **`api.js`**: This file contains all the functions for making API calls to the backend server. It uses `axios` to send HTTP requests.
 *   **`localdb.js`**: This file contains the logic for interacting with the local IndexedDB. It uses `dexie.js` to manage the local database, which is used for offline data storage and caching.
 
+

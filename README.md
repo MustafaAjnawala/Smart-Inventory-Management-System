@@ -6,6 +6,13 @@
 
 ---
 
+### 🌐 **Live Demo**
+
+Check out the live version of the application here:
+[https://careeco-inventory-management-system-x0ri.onrender.com/](https://careeco-inventory-management-system-x0ri.onrender.com/)
+
+---
+
 ### 🚀 **Key Feature: Uninterrupted Workflow with Hybrid Online/Offline Sync**
 
 CareEco is engineered for reliability. Work offline without a hitch, and watch as your data automatically syncs to the central server the moment you're back online. **Your business never stops, and neither does your inventory system.**
