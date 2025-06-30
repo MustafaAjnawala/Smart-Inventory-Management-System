@@ -63,7 +63,7 @@ jobs:
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         working-directory: ./one-smart-inc-frontend-electron
-        run: npm run build:linux -- --x64 -c.publish=never -c.linux.target=AppImage,deb
+        run: npm run build:linux -- --x64 -c.publish=never --linux AppImage deb
 
       # Upload artifacts with better path handling
       - name: Upload Windows artifacts
