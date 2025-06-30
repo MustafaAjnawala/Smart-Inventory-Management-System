@@ -29,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '23'
+          node-version: '20' # Use LTS version instead of 23
           cache: 'npm'
           cache-dependency-path: 'one-smart-inc-frontend-electron/package-lock.json'
 
@@ -45,59 +45,49 @@ jobs:
       - name: Build Windows
         if: matrix.os == 'windows-latest'
         working-directory: ./one-smart-inc-frontend-electron
-        run: npm run build:win -- --x64 --publish never -c.win.target=nsis,zip
+        run: npm run build:win -- --x64 -c.publish=never -c.win.target=nsis,zip
 
-      # macOS Build
+      # macOS Build (with proper code signing setup)
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         working-directory: ./one-smart-inc-frontend-electron
         run: npm run build:mac
         env:
+          # Only disable if you don't have certificates
           CSC_IDENTITY_AUTO_DISCOVERY: false
+          # For production, set up proper code signing:
+          # CSC_LINK: ${{ secrets.CSC_LINK }}
+          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
 
-      # Install snapcraft for Linux build
-      - name: Install snapcraft
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo snap install snapcraft --classic
-
-      # Linux Build
+      # Linux Build (removed unused snapcraft)
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         working-directory: ./one-smart-inc-frontend-electron
-        run: npm run build:linux
+        run: npm run build:linux -- --x64 -c.publish=never -c.linux.target=AppImage,deb
 
-      # Upload Windows artifacts
+      # Upload artifacts with better path handling
       - name: Upload Windows artifacts
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: |
-            one-smart-inc-frontend-electron/dist/*.exe
-            one-smart-inc-frontend-electron/dist/*.zip
+          path: one-smart-inc-frontend-electron/dist/
           retention-days: 30
 
-      # Upload macOS artifacts
       - name: Upload macOS artifacts
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: |
-            one-smart-inc-frontend-electron/dist/*.dmg
-            one-smart-inc-frontend-electron/dist/*.zip
+          path: one-smart-inc-frontend-electron/dist/
           retention-days: 30
 
-      # Upload Linux artifacts
       - name: Upload Linux artifacts
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
-          path: |
-            one-smart-inc-frontend-electron/dist/*.AppImage
-            one-smart-inc-frontend-electron/dist/*.deb
-            one-smart-inc-frontend-electron/dist/*.snap
+          path: one-smart-inc-frontend-electron/dist/
           retention-days: 30
 
   release:
@@ -126,80 +116,60 @@ jobs:
             echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.get_version.outputs.VERSION }}
-          release_name: CareEco Inventory Manager ${{ steps.get_version.outputs.VERSION }}
-          body: |
-            ## 🚀 What's New in ${{ steps.get_version.outputs.VERSION }}
+      # Use the modern gh CLI approach instead of deprecated actions
+      - name: Create Release with Assets
+        run: |
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          
+          # Create release notes
+          cat > release_notes.md << EOF
+          ## 🚀 What's New in ${VERSION}
 
-            ### 📦 Downloads
-            - **Windows**: Download the `.exe` installer or portable `.zip` file
-            - **macOS**: Download the `.dmg` installer
-            - **Linux**: Download the `.AppImage`, `.deb`, or `.snap` package
+          ### 📦 Downloads
+          - **Windows**: Download the \`.exe\` installer or portable \`.zip\` file
+          - **macOS**: Download the \`.dmg\` installer  
+          - **Linux**: Download the \`.AppImage\` or \`.deb\` package
 
-            ### 🔧 Changes
-            - Performance improvements
-            - Bug fixes and stability enhancements
-            - Updated dependencies
+          ### 🔧 Changes
+          - Performance improvements
+          - Bug fixes and stability enhancements
+          - Updated dependencies
 
-            ### 📋 System Requirements
-            - **Windows**: Windows 10 or later (64-bit)
-            - **macOS**: macOS 10.14 or later
-            - **Linux**: Most modern distributions
+          ### 📋 System Requirements
+          - **Windows**: Windows 10 or later (64-bit)
+          - **macOS**: macOS 10.14 or later
+          - **Linux**: Most modern distributions
 
-            ---
+          ---
 
-            **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ github.event.before }}...${{ steps.get_version.outputs.VERSION }}
-          draft: false
-          prerelease: false
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ github.event.before }}...${VERSION}
+          EOF
 
-      # Upload Windows files
-      - name: Upload Windows Installer
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist-artifacts/windows-build/CareEco Inventory Manager Setup ${{ steps.get_version.outputs.VERSION }}.exe
-          asset_name: CareEco-Inventory-Manager-${{ steps.get_version.outputs.VERSION }}-setup.exe
-          asset_content_type: application/octet-stream
-        continue-on-error: true
+          # Create the release
+          gh release create "${VERSION}" \
+            --title "CareEco Inventory Manager ${VERSION}" \
+            --notes-file release_notes.md \
+            --draft=false \
+            --prerelease=false
 
-      - name: Upload Windows Portable
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist-artifacts/windows-build/CareEco Inventory Manager-${{ steps.get_version.outputs.VERSION }}-win.zip
-          asset_name: CareEco-Inventory-Manager-${{ steps.get_version.outputs.VERSION }}-portable.zip
-          asset_content_type: application/zip
-        continue-on-error: true
+          # Upload assets dynamically (handles varying filenames better)
+          find ./dist-artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.deb" -o -name "*.zip" \) | while read file; do
+            echo "Uploading: $file"
+            gh release upload "${VERSION}" "$file" || echo "Failed to upload $file"
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Upload macOS files
-      - name: Upload macOS DMG
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist-artifacts/macos-build/CareEco Inventory Manager-${{ steps.get_version.outputs.VERSION }}.dmg
-          asset_name: CareEco-Inventory-Manager-${{ steps.get_version.outputs.VERSION }}.dmg
-          asset_content_type: application/octet-stream
-        continue-on-error: true
+      # Optional: Add checksums for verification
+      - name: Generate checksums
+        run: |
+          cd ./dist-artifacts
+          find . -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "*.deb" -o -name "*.zip" \) -exec sha256sum {} \; > checksums.txt
+          cat checksums.txt
 
-      # Upload Linux files
-      - name: Upload Linux AppImage
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist-artifacts/linux-build/CareEco Inventory Manager-${{ steps.get_version.outputs.VERSION }}.AppImage
-          asset_name: CareEco-Inventory-Manager-${{ steps.get_version.outputs.VERSION }}.AppImage
-          asset_content_type: application/octet-stream
-        continue-on-error: true
-
-      - name: Upload Linux DEB
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist-artifacts/linux-build/careeco-inventory-manager_${{ steps.get_version.outputs.VERSION }}_amd64.deb
-          asset_name: CareEco-Inventory-Manager-${{ steps.get_version.outputs.VERSION }}.deb
-          asset_content_type: application/vnd.debian.binary-package
-        continue-on-error: true
+      - name: Upload checksums
+        run: |
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          gh release upload "${VERSION}" ./dist-artifacts/checksums.txt || echo "Failed to upload checksums"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
