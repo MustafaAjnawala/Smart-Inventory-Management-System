@@ -131,8 +131,3 @@ This project was brought to life by:
 *   **Neel Khatri** - [GitHub Profile](https://github.com/o-Erebus)
 
 ---
-
-### 📄 **License**
-
-This project is licensed under the MIT License - see the `LICENSE.md` file for details.
-
