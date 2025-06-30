@@ -1,234 +1,289 @@
-# 📘 OneSmart Inventory & Billing API Documentation
+# CareEco Inventory Management System Documentation
 
-## ✅ 1. Create Product
+## 1. Introduction
 
-**POST** `/api/products`
+This document provides a comprehensive overview of the CareEco Inventory Management System, a desktop application built for One Smart Inc. using the MERN stack and Electron. It covers the project structure, API endpoints, frontend components, and database models in detail.
 
-Used to add a new product.
+## 2. Technologies Used
 
-### 🔸 Request
+*   **Frontend:**
+    *   React
+    *   Electron
+    *   Material-UI
+    *   Vite
+    *   Axios
+    *   Dexie.js (for IndexedDB)
+*   **Backend:**
+    *   Node.js
+    *   Express
+    *   MongoDB
+    *   Mongoose
+*   **Database:**
+    *   MongoDB
 
-```json
+## 3. Project Structure
+
+```
+.
+├── one-smart-inc-frontend-electron/  # Electron frontend application
+│   ├── src/
+│   │   ├── main/                       # Electron main process
+│   │   ├── preload/                    # Electron preload script
+│   │   └── renderer/                   # React frontend
+│   │       ├── src/
+│   │       │   ├── components/         # React components
+│   │       │   ├── services/           # API and local DB services
+│   │       │   └── theme/              # Material-UI theme
+├── server/                             # Node.js backend
+│   ├── controllers/                    # Route handlers
+│   ├── models/                         # Mongoose models
+│   └── ...
+└── ...
+```
+
+## 4. API Endpoints
+
+### Product Endpoints
+
+*   **`POST /api/products`**: Add a new product.
+    *   **Request Body**:
+        ```json
+        {
+          "name": "Product Name",
+          "specific": {
+            "flavor": "Flavor",
+            "color": "Color",
+            "weight": "Weight",
+            "volume": "Volume"
+          }
+        }
+        ```
+    *   **Response**:
+        ```json
+        {
+          "msg": "Product created successfully",
+          "product": { ... } // Product object
+        }
+        ```
+
+*   **`GET /api/products`**: Get all products.
+    *   **Response**:
+        ```json
+        [
+          { ... } // Array of product objects
+        ]
+        ```
+
+### Purchase Endpoints
+
+*   **`POST /api/purchases`**: Add a new purchase.
+    *   **Request Body**:
+        ```json
+        {
+          "productName": "Product Name",
+          "purchaseDate": "2025-06-30T00:00:00.000Z",
+          "quantity": 100,
+          "purchasePrice": 10,
+          "discount": 5,
+          "mrp": 15,
+          "expiryDate": "2026-06-30T00:00:00.000Z",
+          "remainingQty": 100
+        }
+        ```
+    *   **Response**:
+        ```json
+        { ... } // Purchase object
+        ```
+
+*   **`GET /api/purchases`**: Get all purchases.
+    *   **Response**:
+        ```json
+        [
+          { ... } // Array of purchase objects
+        ]
+        ```
+
+### Bill Endpoints
+
+*   **`GET /api/bills`**: Get all bills.
+    *   **Response**:
+        ```json
+        [
+          { ... } // Array of bill objects
+        ]
+        ```
+
+*   **`POST /api/billing`**: Process a new bill.
+    *   **Request Body**:
+        ```json
+        {
+          "billNo": "BILL-001",
+          "customerName": "John Doe",
+          "totalAmount": 150,
+          "paidAmount": 150,
+          "paymentMethod": "Cash",
+          "items": [
+            {
+              "productName": "Product Name",
+              "quantity": 10,
+              "pricePerUnit": 15,
+              "total": 150
+            }
+          ]
+        }
+        ```
+    *   **Response**:
+        ```json
+        { ... } // Bill object
+        ```
+
+### Return Endpoints
+
+*   **`POST /api/returns`**: Process a product return.
+    *   **Request Body**:
+        ```json
+        {
+          "purchaseId": "60d5f1b3e6b3f3b4a8f3b3a8",
+          "returnedQty": 10,
+          "expectedRefund": 100,
+          "actualRefund": 100
+        }
+        ```
+    *   **Response**:
+        ```json
+        {
+          "msg": "Return processed succesfully",
+          "return": { ... }, // Return object
+          "currentnINventory": 90
+        }
+        ```
+
+## 5. Frontend
+
+### Components
+
+*   **`Billing.jsx`**: Component for creating and managing bills.
+*   **`Bills.jsx`**: Component for displaying a list of all bills.
+*   **`Dashboard.jsx`**: The main dashboard component.
+*   **`ExpiryNotification.jsx`**: Component for displaying products nearing their expiry date.
+*   **`Products.jsx`**: Component for managing products.
+*   **`Purchases.jsx`**: Component for managing purchases.
+*   **`Returns.jsx`**: Component for managing product returns.
+*   **`Versions.jsx`**: Component for displaying application version information.
+
+### Services
+
+*   **`api.js`**: Contains functions for making API calls to the backend.
+*   **`localdb.js`**: Contains functions for interacting with the local IndexedDB database using Dexie.js.
+
+## 6. Database Models
+
+### Product Model
+
+```javascript
 {
-  "name": "Real Juice",
-  "specific": {
-    "flavor": "Mango",
-    "color": "Yellow",
-    "weight": "1L",
-    "volume": "1000ml"
-  }
+  name: { type: String, required: true, unique: true },
+  specific: {
+    flavor: { type: String },
+    color: { type: String },
+    weight: { type: String },
+    volume: { type: String },
+  },
 }
 ```
 
-### 🔸 Response
+### Purchase Model
 
-```json
+```javascript
 {
-  "msg": "Product created successfully",
-  "product": { ... }
+  productName: { type: String, required: true },
+  purchaseDate: { type: Date, required: true },
+  quantity: { type: Number, required: true },
+  purchasePrice: { type: Number, required: true },
+  discount: { type: Number, default: 0 }, //in percent
+  mrp: { type: Number, required: true },
+  expiryDate: { type: Date },
+  remainingQty: { type: Number, required: true },
 }
 ```
 
----
+### Return Model
 
-## ✅ 2. Get All Products
-
-**GET** `/api/products`
-
-### 🔸 Response
-
-```json
-[
-  {
-    "_id": "...",
-    "name": "Real Juice",
-    "specific": { ... },
-    "createdAt": "...",
-    "updatedAt": "..."
-  }
-]
-```
-
----
-
-## ✅ 3. Add Purchase (Add Inventory Batch)
-
-**POST** `/api/purchases`
-
-### 🔸 Request
-
-```json
+```javascript
 {
-  "productName": "Real Juice",
-  "purchaseDate": "2025-06-26",
-  "quantity": 100,
-  "purchasePrice": 22.5,
-  "discount": 10,
-  "mrp": 28,
-  "expiryDate": "2025-07-20",
-  "remainingQty": 100
+  purchaseId: { type: Schema.Types.ObjectId, ref: 'Purchase', required: true },
+  returnedQty: { type: Number, required: true },
+  expectedRefund: { type: Number, required: true },
+  actualRefund: { type: Number, required: true },
+  returnDate: { type: Date, default: Date.now },
 }
 ```
 
-### 🔸 Response
+### Bill Model
 
-```json
+```javascript
 {
-  "_id": "...",
-  "productName": "...",
-  ...
-}
-```
-
----
-
-## ✅ 4. Get All Purchases
-
-**GET** `/api/purchases`
-
-Returns all purchase (inventory) entries, newest first.
-
-### 🔸 Response
-
-```json
-[
-  {
-    "_id": "...",
-    "productName": "...",
-    "purchaseDate": "...",
-    ...
-  }
-]
-```
-
----
-
-## ✅ 5. Get Expiring SKUs
-
-**GET** `/api/purchases/expiring`
-
-Returns items with `expiryDate` within next 30 days.
-
-### 🔸 Response
-
-```json
-[
-  {
-    "_id": "...",
-    "productName": "Real Juice",
-    "expiryDate": "2025-07-15",
-    ...
-  }
-]
-```
-
----
-
-## ✅ 6. Return Product
-
-**POST** `/api/returns`
-
-Registers a return against a specific purchase.
-
-### 🔸 Request
-
-```json
-{
-  "purchaseId": "665d4e12345678abcde00012",
-  "returnedQty": 10,
-  "expectedRefund": 185,
-  "actualRefund": 180
-}
-```
-
-### 🔸 Response
-
-```json
-{
-  "msg": "Return processed successfully",
-  "return": { ... },
-  "updatedInventory": 90
-}
-```
-
----
-
-## ✅ 7. Create Bill
-
-**POST** `/api/bills`
-
-Generates a customer invoice and updates inventory across multiple purchase batches.
-
-### 🔸 Request
-
-```json
-{
-  "billNo": "INV-001",
-  "customerName": "Amit",
-  "totalAmount": 180,
-  "paidAmount": 180,
-  "paymentMethod": "Cash",
-  "items": [
+  billNo: { type: String, required: true, unique: true },
+  customerName: { type: String },
+  totalAmount: { type: Number, required: true },
+  paidAmount: { type: Number, required: true },
+  paymentMethod: { type: String, enum: ['Cash', 'UPI', 'Card', 'Other'], default: 'Cash' },
+  items: [
     {
-      "productName": "Real Juice",
-      "quantity": 5,
-      "pricePerUnit": 36,
-      "total": 180
-    }
-  ]
+      productName: { type: String },
+      quantity: { type: Number },
+      pricePerUnit: { type: Number },
+      discount: { type: Number, default: 0 }, // Discount percentage
+      discountedPrice: { type: Number }, // Price after discount
+      total: { type: Number },
+    },
+  ],
 }
 ```
 
-### 🔸 Response
+### SyncLog Model
 
-```json
+```javascript
 {
-  "_id": "...",
-  "billNo": "INV-001",
-  ...
+  syncType: { type: String, enum: ['auto', 'manual'], default: 'auto' },
+  syncedAt: { type: Date, default: Date.now },
+  success: { type: Boolean, default: true },
+  errorMsg: { type: String },
 }
 ```
 
----
+## 7. Getting Started
 
-## ✅ 8. Get Sync Logs (Optional) - dont bother for now
+### Prerequisites
 
-**GET** `/api/sync`
+*   Node.js
+*   MongoDB
 
-### 🔸 Response
+### Installation
 
-```json
-[
-  {
-    "syncType": "manual",
-    "syncedAt": "2025-06-26T15:00:00Z",
-    "success": true
-  }
-]
-```
+1.  **Backend:**
+    ```bash
+    cd server
+    npm install
+    ```
 
----
+2.  **Frontend:**
+    ```bash
+    cd one-smart-inc-frontend-electron
+    npm install
+    ```
 
-## ✅ 9. Log a Sync Event (Optional) - dont consider for now
+### Running the Application
 
-**POST** `/api/sync`
+1.  **Start the backend server:**
+    ```bash
+    cd server
+    npm run dev
+    ```
 
-### 🔸 Request
+2.  **Start the frontend application:**
+    ```bash
+    cd one-smart-inc-frontend-electron
+    npm run dev
+    ```
 
-```json
-{
-  "syncType": "auto",
-  "success": true,
-  "errorMsg": ""
-}
-```
-
----
-
-## 📝 Notes for Frontend Developer
-
-- Always show product names in dropdowns for purchase/return/bill.
-- `purchaseId` is required for returns.
-- Billing should simulate FIFO (oldest inventory batch used first).
-- Expiry alerts: fetch `/api/purchases/expiring` on app startup.
-- Dates should be sent as `YYYY-MM-DD` format.
