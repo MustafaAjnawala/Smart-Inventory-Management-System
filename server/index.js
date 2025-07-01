@@ -1,4 +1,5 @@
 const express = require("express");
+const rateLimiter = require("express-rate-limit");
 const cors = require("cors");
 const connectToMongoDB = require("./connectToDb");
 const { Product, Purchase, Return, Bill, SyncLog } = require("./models/models");
@@ -20,8 +21,14 @@ connectToMongoDB(process.env.MONGOURI).then(() => {
 });
 
 const app = express();
+const limiter = rateLimiter({
+  windowMs: 60 * 60 * 1000, //1 hour window
+  max: 30,
+  message: "Too many requests from this IP, please try again after some time",
+});
 
-//middlwares
+//middlewares
+app.use(limiter);
 app.use(express.json());
 app.use(cors());
 
