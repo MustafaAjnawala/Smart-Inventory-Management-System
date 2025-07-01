@@ -276,16 +276,34 @@ export const returnsAPI = {
       if (isOnline()) {
         const response = await api.post("/returns", returnData);
         // Add to local DB
-        await localdb.put("returns", response.data);
+        await localdb.put("returns", response.data.return);
+
+        // Update the local purchase record's remainingQty to match server logic
+        const allPurchases = await localdb.getAll("purchases");
+        const purchaseToUpdate = allPurchases.find(p => p._id === returnData.purchaseId);
+        if (purchaseToUpdate) {
+          purchaseToUpdate.remainingQty -= returnData.returnedQty; // Subtract - matching server logic
+          await localdb.put("purchases", purchaseToUpdate);
+        }
+
         return response;
       } else {
-        // Store locally for sync later
+        // Store locally for sync later AND update the purchase record
         const localReturn = {
           ...returnData,
           _id: `local_${Date.now()}`,
           _pendingSync: true,
           createdAt: new Date().toISOString(),
         };
+
+        // Update the local purchase record's remainingQty to match server logic
+        const allPurchases = await localdb.getAll("purchases");
+        const purchaseToUpdate = allPurchases.find(p => p._id === returnData.purchaseId);
+        if (purchaseToUpdate) {
+          purchaseToUpdate.remainingQty -= returnData.returnedQty; // Subtract - matching server logic
+          await localdb.put("purchases", purchaseToUpdate);
+        }
+
         await localdb.put("returns", localReturn);
         return { data: localReturn };
       }
