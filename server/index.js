@@ -23,7 +23,7 @@ connectToMongoDB(process.env.MONGOURI).then(() => {
 const app = express();
 const limiter = rateLimiter({
   windowMs: 60 * 60 * 1000, //1 hour window
-  max: 30,
+  max: 20,
   message: "Too many requests from this IP, please try again after some time",
 });
 
