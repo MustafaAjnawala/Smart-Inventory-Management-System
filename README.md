@@ -2,7 +2,7 @@
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) [![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white)](https://electronjs.org) [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/) [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://mongodb.com)
 
-**A cutting-edge inventory management solution for One Smart Inc., crafted with the MERN stack and Electron to deliver a seamless, robust, and user-friendly experience.**
+**An inventory management solution for a proposed company One Smart Inc., crafted with the MERN stack and Electron to deliver a seamless, robust, and user-friendly experience.**
 
 ---
 
@@ -21,21 +21,21 @@ CareEco is engineered for reliability. Work offline without a hitch, and watch a
 
 ### 🌟 **Core Features**
 
-*   📦 **Product Management:** Effortlessly add, edit, and track your entire inventory.
-*   🛒 **Purchase Tracking:** Keep a close eye on incoming stock and manage purchases with ease.
-*   🧾 **Billing & Invoicing:** Generate and manage customer invoices seamlessly.
-*   ↩️ **Returns Management:** Handle product returns with an efficient and clear process.
-*   🗓️ **Expiry Date Notifications:** Stay ahead with timely alerts for expiring products.
+- 📦 **Product Management:** Effortlessly add, edit, and track your entire inventory.
+- 🛒 **Purchase Tracking:** Keep a close eye on incoming stock and manage purchases with ease.
+- 🧾 **Billing & Invoicing:** Generate and manage customer invoices seamlessly.
+- ↩️ **Returns Management:** Handle product returns with an efficient and clear process.
+- 🗓️ **Expiry Date Notifications:** Stay ahead with timely alerts for expiring products.
 
 ---
 
 ### 💻 **Tech Stack**
 
-| Category      | Technology                                    |
-| ------------- | --------------------------------------------- |
-| **Frontend**  | React, Electron, Material-UI, Vite            |
-| **Backend**   | Node.js, Express                              |
-| **Database**  | MongoDB, Mongoose                             |
+| Category     | Technology                         |
+| ------------ | ---------------------------------- |
+| **Frontend** | React, Electron, Material-UI, Vite |
+| **Backend**  | Node.js, Express                   |
+| **Database** | MongoDB, Mongoose                  |
 
 ---
 
@@ -43,18 +43,20 @@ CareEco is engineered for reliability. Work offline without a hitch, and watch a
 
 **Prerequisites:**
 
-*   Node.js
-*   MongoDB
+- Node.js
+- MongoDB
 
 **Installation:**
 
 1.  **Backend:**
+
     ```bash
     cd server
     npm install
     ```
 
 2.  **Web Frontend:**
+
     ```bash
     cd one-smart-inc-frontend
     npm install
@@ -69,12 +71,14 @@ CareEco is engineered for reliability. Work offline without a hitch, and watch a
 **Running the Application:**
 
 1.  **Start the backend server:**
+
     ```bash
     cd server
     npm run dev
     ```
 
 2.  **Start the Web application:**
+
     ```bash
     cd one-smart-inc-frontend
     npm run dev
@@ -112,11 +116,11 @@ CareEco is engineered for reliability. Work offline without a hitch, and watch a
 
 ### ↔️ **API Endpoints**
 
-*   `POST /api/products` - Add a new product
-*   `GET /api/products` - Get all products
-*   `POST /api/purchases` - Add a new purchase
-*   `GET /api/purchases` - Get all purchases
-*   `GET /api/bills` - Get all bills
+- `POST /api/products` - Add a new product
+- `GET /api/products` - Get all products
+- `POST /api/purchases` - Add a new purchase
+- `GET /api/purchases` - Get all purchases
+- `GET /api/bills` - Get all bills
 
 ---
 
@@ -124,9 +128,9 @@ CareEco is engineered for reliability. Work offline without a hitch, and watch a
 
 For more detailed information, please refer to the documentation for each part of the project:
 
-*   [Server Documentation](./server/README.md)
-*   [Web Frontend Documentation](./one-smart-inc-frontend/README.md)
-*   [Electron Frontend Documentation](./one-smart-inc-frontend-electron/README.md)
+- [Server Documentation](./server/README.md)
+- [Web Frontend Documentation](./one-smart-inc-frontend/README.md)
+- [Electron Frontend Documentation](./one-smart-inc-frontend-electron/README.md)
 
 ---
 
@@ -134,7 +138,7 @@ For more detailed information, please refer to the documentation for each part o
 
 This project was brought to life by:
 
-*   **Mustafa Ajnawala** - [GitHub Profile](https://github.com/MustafaAjnawala)
-*   **Neel Khatri** - [GitHub Profile](https://github.com/o-Erebus)
+- **Mustafa Ajnawala** - [GitHub Profile](https://github.com/MustafaAjnawala)
+- **Neel Khatri** - [GitHub Profile](https://github.com/o-Erebus)
 
 ---

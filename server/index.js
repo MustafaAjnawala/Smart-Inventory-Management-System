@@ -31,6 +31,14 @@ const limiter = rateLimiter({
 app.use(express.json());
 app.use(cors());
 
+app.use((req, res, next) => {
+  const methodsToBlock = ["POST", "PUT", "PATCH", "DELETE"];
+  if (methodsToBlock.includes(req.method)) {
+    return res.status(403).json({ error: "Mutations are disabled." });
+  }
+  next();
+});
+
 //create a new product in DB
 app.post("/api/products", handleAddNewProduct);
 
