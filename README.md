@@ -142,3 +142,5 @@ This project was brought to life by:
 - **Neel Khatri** - [GitHub Profile](https://github.com/o-Erebus)
 
 ---
+
+⭐ **Star this repository if you find it helpful!** ⭐
