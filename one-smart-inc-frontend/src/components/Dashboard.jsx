@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
   Chip,
   IconButton,
   Button,
-} from '@mui/material';
+} from "@mui/material";
 import {
   TrendingUp as SalesIcon,
   Inventory as InventoryIcon,
@@ -22,10 +22,10 @@ import {
   Warning as WarningIcon,
   Refresh as RefreshIcon,
   Delete as DeleteIcon,
-} from '@mui/icons-material';
-import { purchasesAPI, billsAPI } from '../services/api';
-import * as localdb from '../services/localdb';
-import { format } from 'date-fns';
+} from "@mui/icons-material";
+import { purchasesAPI, billsAPI } from "../services/api";
+import * as localdb from "../services/localdb";
+import { format } from "date-fns";
 
 const Dashboard = ({ onNotification }) => {
   const [stats, setStats] = useState({
@@ -52,7 +52,7 @@ const Dashboard = ({ onNotification }) => {
       const expiring = expiringResponse.data;
 
       // Calculate basic stats
-      const uniqueProducts = [...new Set(purchases.map(p => p.productName))];
+      const uniqueProducts = [...new Set(purchases.map((p) => p.productName))];
 
       // Try to fetch bills for sales data, but don't break if it fails
       let totalSales;
@@ -61,7 +61,7 @@ const Dashboard = ({ onNotification }) => {
         const bills = billsResponse.data;
         totalSales = bills.reduce((sum, bill) => sum + bill.totalAmount, 0);
       } catch (billsError) {
-        console.warn('Could not fetch bills data:', billsError);
+        console.warn("Could not fetch bills data:", billsError);
         // Set sales to 0 if bills API fails
         totalSales = 0;
       }
@@ -75,10 +75,9 @@ const Dashboard = ({ onNotification }) => {
 
       setRecentPurchases(purchases.slice(0, 10));
       setExpiringItems(expiring.slice(0, 5));
-
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      onNotification('Error loading dashboard data', 'error');
+      console.error("Error fetching dashboard data:", error);
+      onNotification("Error loading dashboard data", "error");
     } finally {
       setLoading(false);
     }
@@ -86,15 +85,19 @@ const Dashboard = ({ onNotification }) => {
 
   const handleClearLocalDB = async () => {
     try {
-      if (window.confirm('Are you sure you want to clear all local database data? This action cannot be undone.')) {
+      if (
+        window.confirm(
+          "Are you sure you want to clear all local database data? This action cannot be undone."
+        )
+      ) {
         await localdb.clearAllData();
-        onNotification('Local database cleared successfully', 'success');
+        onNotification("Local database cleared successfully", "success");
         // Refresh dashboard data after clearing
         fetchDashboardData();
       }
     } catch (error) {
-      console.error('Error clearing local database:', error);
-      onNotification('Error clearing local database', 'error');
+      console.error("Error clearing local database:", error);
+      onNotification("Error clearing local database", "error");
     }
   };
 
@@ -103,21 +106,46 @@ const Dashboard = ({ onNotification }) => {
   }, []);
 
   const StatCard = ({ title, value, icon, color }) => (
-    <Card sx={{
-      height: '120px',
-      display: 'flex',
-      alignItems: 'center',
-      boxShadow: 'none',
-      border: '1px solid #e0e0e0'
-    }}>
-      <CardContent sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Box sx={{ color, fontSize: '2rem' }}>{icon}</Box>
-          <Typography variant="h4" component="div" color={color} sx={{ fontWeight: 'bold', textAlign: 'right' }}>
-            {title.includes('Sales') ? `₹${value.toLocaleString()}` : value}
+    <Card
+      sx={{
+        height: "120px",
+        display: "flex",
+        alignItems: "center",
+        boxShadow: "none",
+        border: "1px solid #e0e0e0",
+      }}
+    >
+      <CardContent
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 1,
+          }}
+        >
+          <Box sx={{ color, fontSize: "2rem" }}>{icon}</Box>
+          <Typography
+            variant="h4"
+            component="div"
+            color={color}
+            sx={{ fontWeight: "bold", textAlign: "right" }}
+          >
+            {title.includes("Sales") ? `₹${value.toLocaleString()}` : value}
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem', fontWeight: 500 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: "0.875rem", fontWeight: 500 }}
+        >
           {title}
         </Typography>
       </CardContent>
@@ -132,61 +160,61 @@ const Dashboard = ({ onNotification }) => {
   };
 
   const getExpiryChipColor = (days) => {
-    if (days <= 7) return 'error';
-    if (days <= 14) return 'warning';
-    return 'info';
+    if (days <= 7) return "error";
+    if (days <= 14) return "warning";
+    return "info";
   };
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <Typography>Loading dashboard...</Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={{ position: "relative" }}>
       {/* Action Buttons - Absolute positioned */}
-      <Box sx={{
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        zIndex: 1,
-        display: 'flex',
-        gap: 1,
-        mb: 4,
-      }}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          zIndex: 1,
+          display: "flex",
+          gap: 1,
+          mb: 4,
+        }}
+      >
         <Button
           variant="outlined"
           color="error"
           startIcon={<DeleteIcon />}
           onClick={handleClearLocalDB}
-          sx={{height: '40px'}}
+          sx={{ height: "40px" }}
         >
           Clear LocalDB
         </Button>
-        <IconButton
-          onClick={fetchDashboardData}
-          color="primary"
-          size="large"
-        >
+        <IconButton onClick={fetchDashboardData} color="primary" size="large">
           <RefreshIcon />
         </IconButton>
       </Box>
 
       {/* Stats Cards - Centered and compact */}
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        gap: 2,
-        mb: 4,
-        maxWidth: '900px',
-        mx: 'auto',
-        pt: 6, // Add padding top to avoid overlap with absolute buttons
-      }}>
-        <Box sx={{ flex: '1 1 200px', minWidth: '200px', maxWidth: '220px' }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: 2,
+          mb: 4,
+          maxWidth: "900px",
+          mx: "auto",
+          pt: 6, // Add padding top to avoid overlap with absolute buttons
+        }}
+      >
+        <Box sx={{ flex: "1 1 200px", minWidth: "200px", maxWidth: "220px" }}>
           <StatCard
             title="Total Sales"
             value={stats.totalSales}
@@ -194,7 +222,7 @@ const Dashboard = ({ onNotification }) => {
             color="success.main"
           />
         </Box>
-        <Box sx={{ flex: '1 1 200px', minWidth: '200px', maxWidth: '220px' }}>
+        <Box sx={{ flex: "1 1 200px", minWidth: "200px", maxWidth: "220px" }}>
           <StatCard
             title="Total Products"
             value={stats.totalProducts}
@@ -202,7 +230,7 @@ const Dashboard = ({ onNotification }) => {
             color="primary.main"
           />
         </Box>
-        <Box sx={{ flex: '1 1 200px', minWidth: '200px', maxWidth: '220px' }}>
+        <Box sx={{ flex: "1 1 200px", minWidth: "200px", maxWidth: "220px" }}>
           <StatCard
             title="Purchase Batches"
             value={stats.totalPurchases}
@@ -210,7 +238,7 @@ const Dashboard = ({ onNotification }) => {
             color="secondary.main"
           />
         </Box>
-        <Box sx={{ flex: '1 1 200px', minWidth: '200px', maxWidth: '220px' }}>
+        <Box sx={{ flex: "1 1 200px", minWidth: "200px", maxWidth: "220px" }}>
           <StatCard
             title="Expiring Soon"
             value={stats.expiringItems}
@@ -221,15 +249,17 @@ const Dashboard = ({ onNotification }) => {
       </Box>
 
       {/* Bottom Section - Flex layout */}
-      <Box sx={{
-        display: 'flex',
-        gap: 3,
-        flexWrap: 'wrap',
-        alignItems: 'flex-start'
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 3,
+          flexWrap: "wrap",
+          alignItems: "flex-start",
+        }}
+      >
         {/* Recent Purchases */}
-        <Box sx={{ flex: '2 1 400px', minWidth: '400px' }}>
-          <Paper sx={{ p: 2, boxShadow: 'none', border: '1px solid #e0e0e0' }}>
+        <Box sx={{ flex: "2 1 400px", minWidth: "400px" }}>
+          <Paper sx={{ p: 2, boxShadow: "none", border: "1px solid #e0e0e0" }}>
             <Typography variant="h6" gutterBottom>
               Recent Purchases
             </Typography>
@@ -249,13 +279,17 @@ const Dashboard = ({ onNotification }) => {
                     <TableRow key={purchase._id}>
                       <TableCell>{purchase.productName}</TableCell>
                       <TableCell>
-                        {format(new Date(purchase.purchaseDate), 'dd/MM/yyyy')}
+                        {format(new Date(purchase.purchaseDate), "dd/MM/yyyy")}
                       </TableCell>
                       <TableCell align="right">{purchase.quantity}</TableCell>
                       <TableCell align="right">
                         <Typography
-                          color={purchase.remainingQty <= 10 ? 'error' : 'inherit'}
-                          fontWeight={purchase.remainingQty <= 10 ? 'bold' : 'normal'}
+                          color={
+                            purchase.remainingQty <= 10 ? "error" : "inherit"
+                          }
+                          fontWeight={
+                            purchase.remainingQty <= 10 ? "bold" : "normal"
+                          }
                         >
                           {purchase.remainingQty}
                         </Typography>
@@ -270,8 +304,8 @@ const Dashboard = ({ onNotification }) => {
         </Box>
 
         {/* Expiring Items */}
-        <Box sx={{ flex: '1 1 300px', minWidth: '300px' }}>
-          <Paper sx={{ p: 2, boxShadow: 'none', border: '1px solid #e0e0e0' }}>
+        <Box sx={{ flex: "1 1 300px", minWidth: "300px" }}>
+          <Paper sx={{ p: 2, boxShadow: "none", border: "1px solid #e0e0e0" }}>
             <Typography variant="h6" gutterBottom>
               Items Expiring Soon
             </Typography>
@@ -288,24 +322,31 @@ const Dashboard = ({ onNotification }) => {
                       key={item._id}
                       sx={{
                         p: 2,
-                        border: '1px solid',
-                        borderColor: 'divider',
+                        border: "1px solid",
+                        borderColor: "divider",
                         borderRadius: 1,
                         mb: 1,
                       }}
                     >
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          mb: 1,
+                        }}
+                      >
                         <Typography variant="subtitle2">
                           {item.productName}
                         </Typography>
                         <Chip
-                          label={`${daysLeft} days`}
+                          label={daysLeft < 0 ? "Expired" : `${daysLeft} days`}
                           color={getExpiryChipColor(daysLeft)}
                           size="small"
                         />
                       </Box>
                       <Typography variant="body2" color="text.secondary">
-                        Qty: {item.remainingQty} | Expires: {format(new Date(item.expiryDate), 'dd/MM/yyyy')}
+                        Qty: {item.remainingQty} | Expires:{" "}
+                        {format(new Date(item.expiryDate), "dd/MM/yyyy")}
                       </Typography>
                     </Box>
                   );
