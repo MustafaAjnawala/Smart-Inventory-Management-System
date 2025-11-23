@@ -1,4 +1,4 @@
-# ✨ CareEco Inventory Management System ✨
+# ✨ Smart Inventory Management System ✨
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) [![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white)](https://electronjs.org) [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/) [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://mongodb.com)
 
@@ -15,7 +15,7 @@ Check out the live version of the application here:
 
 ### 🚀 **Key Feature: Uninterrupted Workflow with Hybrid Online/Offline Sync**
 
-CareEco is engineered for reliability. Work offline without a hitch, and watch as your data automatically syncs to the central server the moment you're back online. **Your business never stops, and neither does your inventory system.**
+SmartInc is engineered for reliability. Work offline without a hitch, and watch as your data automatically syncs to the central server the moment you're back online. **Your business never stops, and neither does your inventory system.**
 
 ---
 
@@ -36,6 +36,19 @@ CareEco is engineered for reliability. Work offline without a hitch, and watch a
 | **Frontend** | React, Electron, Material-UI, Vite |
 | **Backend**  | Node.js, Express                   |
 | **Database** | MongoDB, Mongoose                  |
+
+---
+
+### 📸 **Screenshots**
+
+**Dashboard**
+![Dashboard](./assets/screenshots/Dashboard.png)
+
+**Purchase Orders**
+![Purchase Orders](./assets/screenshots/Purchase%20Orders.png)
+
+**Billing**
+![Billing](./assets/screenshots/Billing.png)
 
 ---
 
